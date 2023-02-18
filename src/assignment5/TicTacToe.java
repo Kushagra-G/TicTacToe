@@ -100,6 +100,36 @@ public class TicTacToe {
             }
             // Need to figure out a for loop so it keeps running the game from here.
         }
+
+
+            //////////////need fo fix this while loop, idk why is it giving an error////////////////
+
+        while (!checkDraw(char[][] state) || !checkWin(char[][] state)){
+
+            if (randValue >= 5){
+
+                for (int i = 0; i > 20; i++) {
+                    if (i % 2 == 0) {
+                        gameHistory.add(runPlayerMove(playerNames[1], playerTwoSymbol, null));
+                    } else {
+                        gameHistory.add(runPlayerMove(playerNames[0], playerTwoSymbol, null));
+                    }
+                }
+            }
+
+            else{
+                for (int i = 0; i > 20; i++) {
+                    if (i % 2 == 0) {
+                        gameHistory.add(runPlayerMove(playerNames[0], playerTwoSymbol, null));
+                    } else {
+                        gameHistory.add(runPlayerMove(playerNames[1], playerTwoSymbol, null));
+                    }
+                }
+
+            }
+
+
+        }
         return gameHistory;
     }
 
@@ -219,8 +249,15 @@ public class TicTacToe {
 
     // Given a state, simply checks whether all spaces are occupied. Does not care or check if a player has won.
     private static boolean checkDraw(char[][] state) {
-        // TODo
-        return false;
+
+        boolean tieconditon = false;
+
+              if (!checkWin(state)){
+
+                  tieconditon  = true;
+
+              }
+              return tieconditon;
     }
 
     // Given a game state, return a new game state with move from the AI
@@ -248,8 +285,20 @@ public class TicTacToe {
 
     // Given a game state, return an ArrayList of [row, column] positions that are unclaimed on the board
     private static ArrayList<int[]> getValidMoves(char[][] gameState) {
-        // TODO
-        return null;
+
+        ArrayList<int[]> emptyPositions = new ArrayList<>();
+
+
+        for (int i = 0; i < gameState.length; i++) {
+            for (int j = 0; j < gameState[0].length; j++) {
+                if (gameState[i][j] == emptySpaceSymbol) { // check if the current position is empty
+                    int[] position = {i, j}; // create a new array with the current row and column
+                    emptyPositions.add(position); // add the position to the list of empty positions
+                }
+            }
+        }
+
+        return emptyPositions;
     }
 
     // Given player names and the game history, display the past game as in the PDF sample code output
