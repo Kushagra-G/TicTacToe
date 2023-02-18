@@ -104,7 +104,7 @@ public class TicTacToe {
 
             //////////////need fo fix this while loop, idk why is it giving an error////////////////
 
-        while (!checkDraw(char[][] state) || !checkWin(char[][] state)){
+        while (!checkDraw(char[][] state) && !checkWin(char[][] state)){
 
             if (randValue >= 5){
 
