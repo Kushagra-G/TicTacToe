@@ -23,23 +23,39 @@ public class TicTacToe {
         System.out.println("Welcome to the game of Tic Tac Toe, choose one of the following options from below: ");
         System.out.printf("1: Single Player \n2: Two Player\nD: Display Last Match\nQ: Quit\n");
         String userInput = in.next();
+
+        String[] playerName = {"", "Computer"};;
+
+        ArrayList<char[][]> gameHistory = null;
         int userInput2 = Integer.parseInt(userInput);
         if (userInput2 == 1) {
             System.out.print("Enter Player 1 Name: ");
             String singlePlayerName = in.next();
-            String[] playerName = {singlePlayerName, "Computer"};
-            runOnePlayerGame(playerName);
+            playerName[0] = singlePlayerName;
+            gameHistory = runOnePlayerGame(playerName);
+
+
         } else if (userInput2 == 2) {
             String[] playerNames = new String[2];
             System.out.print("Enter Player 1 Name: ");
             String name1 = in.next();
-            playerNames[0] = name1;
+            playerName[0] = name1;
             System.out.print("Enter Player 2 Name: ");
             String name2 = in.next();
-            playerNames[1] = name2;
-            runTwoPlayerGame(playerNames);
-        } else if (userInput == "D") {
-            System.out.println("Placeholder text");
+            playerName[1] = name2;
+            gameHistory = runTwoPlayerGame(playerNames);
+        }
+        else if (userInput == "D") {
+            if(gameHistory == null){
+                System.out.println("no game played yet");
+            }
+            else{
+                runGameHistory(playerName, gameHistory);
+            }
+
+
+
+
         } else if (userInput == "Q") {
             System.out.println("Thanks for playing. Hope you had fun!");
         } else {
@@ -96,20 +112,16 @@ public class TicTacToe {
 //        System.out.print(displayGameFromState(currentState));
         gameHistory.add(currentState);
 
+
+
         for (int i = 0; i < 10; i++) {
-//            System.out.print(displayGameFromState(currentState));
+
+
             if (i % 2 == 0) {
-                currentState = runPlayerMove(secondPlayer, playerTwoSymbol, gameHistory.get(gameHistory.size() -1));
-//                System.out.print(displayGameFromState(currentState));
-                gameHistory.add(runPlayerMove(secondPlayer, playerTwoSymbol, gameHistory.get(gameHistory.size() -1)));
-
+                gameHistory.add(runPlayerMove(secondPlayer, playerTwoSymbol, gameHistory.get(gameHistory.size() - 1)));
             } else {
-                currentState = runPlayerMove(startPlayer, playerOneSymbol, gameHistory.get(gameHistory.size() -1));
-//
-                gameHistory.add(runPlayerMove(startPlayer, playerOneSymbol, gameHistory.get(gameHistory.size() -1)));
-
+                gameHistory.add(runPlayerMove(startPlayer, playerOneSymbol, gameHistory.get(gameHistory.size() - 1)));
             }
-            System.out.println(displayGameFromState(gameHistory.get(gameHistory.size() -1)));
         }
         return gameHistory;
     }
@@ -128,25 +140,33 @@ public class TicTacToe {
     private static char[][] runPlayerMove(String playerName, char playerSymbol, char[][] currentState) {
         Scanner sc = new Scanner(System.in);
         // TODO
-        System.out.print(displayGameFromState(currentState));
-        System.out.println(playerName + "'s turn");
-        System.out.print(playerName + " enter row: ");
-        int moveRow = sc.nextInt();
-        System.out.print(playerName + " enter column: ");
-        int moveColumn = sc.nextInt();
-        int[] move = {moveRow, moveColumn};
-
         char[][] newState = currentState;
-        while (checkValidMove(move, currentState)) {
-            if (checkValidMove(move, currentState)) {
-                newState = makeMove(move, playerSymbol, currentState);
-                currentState = newState;
-                // System.out.print(displayGameFromState(newState)); // Remove this line eventually, just testing
-                return newState;
-            } else {
-                System.out.println("Not a valid move, try again");
-                return runPlayerMove(playerName,playerSymbol, currentState);
+        if(!checkWin(currentState) && !checkDraw(currentState)) {
+            System.out.print(displayGameFromState(currentState));
+            System.out.println(playerName + "'s turn");
+            System.out.print(playerName + " enter row: ");
+            int moveRow = sc.nextInt();
+            System.out.print(playerName + " enter column: ");
+            int moveColumn = sc.nextInt();
+            int[] move = {moveRow, moveColumn};
+            newState = currentState;
+
+            while (checkValidMove(move, currentState) != true || checkValidMove(move, currentState) == true) {
+                if (checkValidMove(move, currentState)) {
+                    newState = makeMove(move, playerSymbol, currentState);
+                    currentState = newState;
+                    return newState;
+                } else {
+                    System.out.println("Not a valid move, try again");
+                    return runPlayerMove(playerName, playerSymbol, currentState);
+                }
             }
+
+        }
+
+        else {
+
+            System.out.println("game ended");
         }
         return newState;
     }
@@ -169,10 +189,10 @@ public class TicTacToe {
     // Doesn't need to check whether move is within bounds of the board.
     private static boolean checkValidMove(int[] move, char[][] state) {
         // TODO
-        if (state[move[0]][move[1]] == emptySpaceSymbol) {
-            return true;
-        } else {
+        if (state[move[0]][move[1]] != emptySpaceSymbol) {
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -200,11 +220,20 @@ public class TicTacToe {
         // you can just check if the same symbol occurs three times in any row, col, or diagonal (except empty space symbol)
         // But either implementation is valid: do whatever makes most sense to you.
 
-
-
         boolean win = false;
+        boolean empty = true;
 
-        while(!win) {
+
+        for(int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                if (state[i][j] != emptySpaceSymbol) {
+                    empty = false;
+                }
+            }
+        }
+
+
+//        while(!win && empty) {
 
 
             if (state[0][0] == playerOneSymbol && state[1][1] == playerOneSymbol && state[2][2] == playerOneSymbol
@@ -216,25 +245,25 @@ public class TicTacToe {
                     || state[0][2] == playerTwoSymbol && state[1][1] == playerTwoSymbol && state[2][0] == playerTwoSymbol) {
                 win = true;
             }
+        //ver
 
             for (int i = 0; i < 2; i++) {
                 if (state[0][i] == playerOneSymbol && state[1][i] == playerOneSymbol && state[2][i] == playerOneSymbol
                         || state[0][i] == playerTwoSymbol && state[1][i] == playerTwoSymbol && state[2][i] == playerTwoSymbol) {
                     win = true;
-                    break;
                 }
             }
 
-            // Vertical
+            //hor
             for (int i = 0; i < 2; i++) {
                 if ((state[i][0] == playerOneSymbol && state[i][1] == playerOneSymbol && state[i][2] == playerOneSymbol)
                         || (state[i][0] == playerTwoSymbol && state[i][1] == playerTwoSymbol && state[i][2] == playerTwoSymbol)) {
                     win = true;
-                    break;
+
                 }
             }
 
-        }
+//        }
 
         return win;
     }
@@ -243,8 +272,18 @@ public class TicTacToe {
     private static boolean checkDraw(char[][] state) {
 
         boolean tieconditon = false;
+        boolean filled = false;
 
-        if (!checkWin(state)){
+
+        for(int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                if (state[i][j] != emptySpaceSymbol) {
+                    filled = false;
+                }
+            }
+        }
+
+        if (!checkWin(state) && filled){
 
             tieconditon  = true;
 
@@ -303,5 +342,12 @@ public class TicTacToe {
         // Hint for the above: which symbol appears after one turn is taken?
 
         // Hint: iterate over gameHistory using a loop
+
+
+//        for(int i =0; i<9; i++){
+//            for
+//        }
+
     }
+
 }
