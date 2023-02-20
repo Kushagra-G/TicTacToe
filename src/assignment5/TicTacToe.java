@@ -76,66 +76,43 @@ public class TicTacToe {
         System.out.println("Tossing a coin to decide who goes first!!!");
         int randValue = (int) (Math.random() * 10);
         ArrayList<char[][]> gameHistory = new ArrayList<char[][]>();
+        String startPlayer;
+        String secondPlayer;
+        char startPlayerSymbol;
+        char secondPlayerSymbol;
+        if (randValue >= 5) {
+            startPlayer = playerNames[0];
+            startPlayerSymbol = playerOneSymbol;
+            secondPlayer = playerNames[1];
+            secondPlayerSymbol = playerTwoSymbol;
+        } else {
+            startPlayer = playerNames[1];
+            startPlayerSymbol = playerTwoSymbol;
+            secondPlayer = playerNames[0];
+            secondPlayerSymbol = playerOneSymbol;
+        }
+        System.out.println(startPlayer + " gets to go first.");
+        char[][] currentState = runPlayerMove(startPlayer, playerOneSymbol, getInitialGameState());
+//        System.out.print(displayGameFromState(currentState));
+        gameHistory.add(currentState);
 
+        for (int i = 0; i < 10; i++) {
+//            System.out.print(displayGameFromState(currentState));
+            if (i % 2 == 0) {
+                currentState = runPlayerMove(secondPlayer, playerTwoSymbol, gameHistory.get(gameHistory.size() -1));
+//                System.out.print(displayGameFromState(currentState));
+                gameHistory.add(runPlayerMove(secondPlayer, playerTwoSymbol, gameHistory.get(gameHistory.size() -1)));
 
-
-
-
-            if (randValue >= 5) {
-                System.out.println(playerNames[0] + " gets to go first.");
-                runPlayerMove(playerNames[0], playerOneSymbol, getInitialGameState());
-                for (int i = 0; i > 20; i++) {
-                    if (i % 2 == 0) {
-                        gameHistory.add(runPlayerMove(playerNames[0], playerTwoSymbol, null));
-                    } else {
-                        gameHistory.add(runPlayerMove(playerNames[1], playerTwoSymbol, null));
-                    }
-                }
-                // Need to figure out a for loop so it keeps running the game from here.
             } else {
-                System.out.println(playerNames[1] + " gets to go first.");
-                runPlayerMove(playerNames[1], playerTwoSymbol, getInitialGameState());
-                for (int i = 0; i > 20; i++) {
-                    if (i % 2 == 0) {
-                        gameHistory.add(runPlayerMove(playerNames[1], playerTwoSymbol, null));
-                    } else {
-                        gameHistory.add(runPlayerMove(playerNames[0], playerTwoSymbol, null));
-                    }
-                }
+                currentState = runPlayerMove(startPlayer, playerOneSymbol, gameHistory.get(gameHistory.size() -1));
+//
+                gameHistory.add(runPlayerMove(startPlayer, playerOneSymbol, gameHistory.get(gameHistory.size() -1)));
 
             }
-
-
-            //////////////need fo fix this while loop, idk why is it giving an error////////////////
-
-//        while ( !checkDraw(char[][] state) && !checkWin(char[][] state)){
-//
-//            if (randValue >= 5){
-//
-//                for (int i = 0; i > 20; i++) {
-//                    if (i % 2 == 0) {
-//                        gameHistory.add(runPlayerMove(playerNames[1], playerTwoSymbol, null));
-//                    } else {
-//                        gameHistory.add(runPlayerMove(playerNames[0], playerTwoSymbol, null));
-//                    }
-//                }
-//            }
-//
-//            else{
-//                for (int i = 0; i > 20; i++) {
-//                    if (i % 2 != 0) {
-//                        gameHistory.add(runPlayerMove(playerNames[0], playerTwoSymbol, null));
-//                    } else {
-//                        gameHistory.add(runPlayerMove(playerNames[1], playerTwoSymbol, null));
-//                    }
-//                }
-//
-//            }
-
-
-//        }
-            return gameHistory;
+            System.out.println(displayGameFromState(gameHistory.get(gameHistory.size() -1)));
         }
+        return gameHistory;
+    }
 
 
     // Given the player names (where player two is "Computer"),
@@ -158,14 +135,20 @@ public class TicTacToe {
         System.out.print(playerName + " enter column: ");
         int moveColumn = sc.nextInt();
         int[] move = {moveRow, moveColumn};
-        if (checkValidMove(move, currentState)) {
-            char[][] newState = makeMove(move, playerSymbol, currentState);
-            System.out.print(displayGameFromState(newState)); // Remove this line eventually, just testing
-            return newState;
-        } else {
-            return currentState;
+
+        char[][] newState = currentState;
+        while (checkValidMove(move, currentState)) {
+            if (checkValidMove(move, currentState)) {
+                newState = makeMove(move, playerSymbol, currentState);
+                currentState = newState;
+                // System.out.print(displayGameFromState(newState)); // Remove this line eventually, just testing
+                return newState;
+            } else {
+                System.out.println("Not a valid move, try again");
+                return runPlayerMove(playerName,playerSymbol, currentState);
+            }
         }
-        // Test this part out!
+        return newState;
     }
 
     // Repeatedly prompts player for move. Returns [row, column] of their desired move such that row & column are on
@@ -234,26 +217,26 @@ public class TicTacToe {
                 win = true;
             }
 
-                for (int i = 0; i < 2; i++) {
-                    if (state[0][i] == playerOneSymbol && state[1][i] == playerOneSymbol && state[2][i] == playerOneSymbol
-                            || state[0][i] == playerTwoSymbol && state[1][i] == playerTwoSymbol && state[2][i] == playerTwoSymbol) {
-                        win = true;
-                        break;
-                    }
+            for (int i = 0; i < 2; i++) {
+                if (state[0][i] == playerOneSymbol && state[1][i] == playerOneSymbol && state[2][i] == playerOneSymbol
+                        || state[0][i] == playerTwoSymbol && state[1][i] == playerTwoSymbol && state[2][i] == playerTwoSymbol) {
+                    win = true;
+                    break;
                 }
-
-                // Vertical
-                for (int i = 0; i < 2; i++) {
-                    if ((state[i][0] == playerOneSymbol && state[i][1] == playerOneSymbol && state[i][2] == playerOneSymbol)
-                            || (state[i][0] == playerTwoSymbol && state[i][1] == playerTwoSymbol && state[i][2] == playerTwoSymbol)) {
-                        win = true;
-                        break;
-                    }
-                }
-
             }
 
-            return win;
+            // Vertical
+            for (int i = 0; i < 2; i++) {
+                if ((state[i][0] == playerOneSymbol && state[i][1] == playerOneSymbol && state[i][2] == playerOneSymbol)
+                        || (state[i][0] == playerTwoSymbol && state[i][1] == playerTwoSymbol && state[i][2] == playerTwoSymbol)) {
+                    win = true;
+                    break;
+                }
+            }
+
+        }
+
+        return win;
     }
 
     // Given a state, simply checks whether all spaces are occupied. Does not care or check if a player has won.
@@ -261,12 +244,12 @@ public class TicTacToe {
 
         boolean tieconditon = false;
 
-              if (!checkWin(state)){
+        if (!checkWin(state)){
 
-                  tieconditon  = true;
+            tieconditon  = true;
 
-              }
-              return tieconditon;
+        }
+        return tieconditon;
     }
 
     // Given a game state, return a new game state with move from the AI
@@ -279,7 +262,7 @@ public class TicTacToe {
         // and see what would happen. This is one reason why makeMove() does not modify the state argument
 
         // Determine all available spaces
-        char[][] avaliablespaces = getValidMoves(gameState);
+        // char[][] avaliablespaces = getValidMoves(gameState);
         // If there is a winning move available, make that move
 
         // If not, check if opponent has a winning move, and if so, make a move there
