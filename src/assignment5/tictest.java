@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class TicTacToe {
+public class tictest {
     // Static variables for the TicTacToe class, effectively configuration options
     // Use these instead of hard-coding ' ', 'X', and 'O' as symbols for the game
     // In other words, changing one of these variables should change the program
@@ -46,7 +46,7 @@ public class TicTacToe {
             gameHistory = runTwoPlayerGame(playerName);
         }
 
-        else if (userInput.equals("D")) {
+        else if (userInput == "D") {
             if (gameHistory == null) {
                 System.out.println("no game played yet");
             } else {
@@ -54,7 +54,7 @@ public class TicTacToe {
             }
         }
 
-        else if (userInput.equals("Q")) {
+        else if (userInput == "Q") {
             System.out.println("Thanks for playing. Hope you had fun!");
         }
         else {
@@ -296,7 +296,7 @@ public class TicTacToe {
         return tieconditon;
     }
 
-    //     Given a game state, return a new game state with move from the AI
+//     Given a game state, return a new game state with move from the AI
 //     It follows the algorithm in the PDF to ensure a tie (or win if possible)
     private static char[][] getCPUMove(char[][] gameState) {
         // TODO
@@ -380,7 +380,7 @@ public class TicTacToe {
         // Hint: iterate over gameHistory using a loop
 
 //
-        for (int i = 0; i < gameHistory.size(); i++) {
+      for (int i = 0; i < gameHistory.size(); i++) {
             System.out.print(displayGameFromState(gameHistory.get(i)));
             int playerIndex = (i % 2);
             System.out.printf("Player %s (%s) made this move.\n\n", (playerIndex+1), playerNames[playerIndex]);
@@ -388,4 +388,4 @@ public class TicTacToe {
     }
 
 
-}
+    }
