@@ -144,6 +144,7 @@ public class TicTacToe {
                 }
             }
             else{
+                System.out.println("game draw");
                 break;
             }
         }
@@ -236,7 +237,7 @@ public class TicTacToe {
                         currentState = move;
                         if (checkWin(currentState)){
 
-                            System.out.println( startPlayer+"has won");
+                            System.out.println( startPlayer+" has won");
 //                            return gameHistory;
                             break;
                         }
@@ -245,7 +246,7 @@ public class TicTacToe {
             }
             else{
 
-                System.out.println("ok");
+                System.out.println("Draw");
                 break;
 
             }
@@ -414,8 +415,8 @@ public class TicTacToe {
 //        boolean filled = false;
 
 
-        for(int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
+        for(int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
                 if (state[i][j] == emptySpaceSymbol) {
 //                    filled = true;
                     return false;
@@ -445,8 +446,8 @@ public class TicTacToe {
 
 
 
-        for (int i = 0; i < gameState.length; i++) {
-            for (int j = 0; j < gameState[0].length; j++) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
                 if (gameState[i][j] == emptySpaceSymbol) {
                     int[] position = {i, j};
                     emptyPositions.add(position);
