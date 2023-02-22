@@ -125,7 +125,7 @@ public class TicTacToe {
                     gameHistory.add(move);
                    currentState = move;
                     if (checkWin(currentState)){
-                        System.out.println( "Second player has won");
+                        System.out.println( secondPlayer +" has won");
 //                            return gameHistory;
                         System.out.print(displayGameFromState(currentState));
 
@@ -136,7 +136,7 @@ public class TicTacToe {
                     gameHistory.add(move);
                     currentState = move;
                     if (checkWin(currentState)){
-                        System.out.println( "Start player has won");
+                        System.out.println( startPlayer +" has won");
 //                            return gameHistory;
                         System.out.print(displayGameFromState(currentState));
                         break;
@@ -200,7 +200,7 @@ public class TicTacToe {
                         currentState = move;
                         if (checkWin(currentState)){
 
-                            System.out.println( "Start player has won");
+                            System.out.println( secondPlayer+ " has won");
 //                            return gameHistory;
                             break;
                         }
@@ -236,7 +236,7 @@ public class TicTacToe {
                         currentState = move;
                         if (checkWin(currentState)){
 
-                            System.out.println("StartPlayer has won");
+                            System.out.println( startPlayer+"has won");
 //                            return gameHistory;
                             break;
                         }
@@ -246,6 +246,7 @@ public class TicTacToe {
             else{
 
                 System.out.println("ok");
+                break;
 
             }
         }
@@ -273,9 +274,18 @@ public class TicTacToe {
                     newState = makeMove(move, playerSymbol, currentState);
                     currentState = newState;
                     return newState;
-                } else {
-                    System.out.println("Not a valid move, try again");
-                    return runPlayerMove(playerName, playerSymbol, currentState);
+                }
+                else {
+                    if((move[0] < 0 || move[0] > 2) || (move[1] < 0 || move[1] > 2)) {
+                        System.out.println("Out of bounds, try again");
+                        return runPlayerMove(playerName, playerSymbol, currentState);
+
+                    }
+                    else if (currentState[move[0]][move[1]] != emptySpaceSymbol) {
+                        System.out.println("Place already occupied");
+                        break;
+                    }
+
                 }
             }
 
