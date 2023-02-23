@@ -20,8 +20,7 @@ public class TicTacToe {
         // Hint: Since many of the game runner methods take in an array of player names,
         // you'll probably need to collect names here.
         Scanner in = new Scanner(System.in);
-        System.out.println("Welcome to the game of Tic Tac Toe, choose one of the following options from below: ");
-        System.out.printf("1: Single Player \n2: Two Player\nD: Display Last Match\nQ: Quit\n");
+
 
         String userInput = "";
 
@@ -31,19 +30,18 @@ public class TicTacToe {
         ArrayList<char[][]> gameHistory = null;
         ;
 
-//        int userInput2 = 0 ;
-//        if(in.hasNextInt()) {
-//            userInput2 = Integer.parseInt(userInput);
-//        }
-
-
+        //checks what the player wants to do
         while (!userInput.equals("Q")) {
+            System.out.println("Welcome to the game of Tic Tac Toe, choose one of the following options from below: ");
+            System.out.printf("1: Single Player \n2: Two Player\nD: Display Last Match\nQ: Quit\n");
+
             userInput = in.next();
             if (userInput.equals("1")) {
                 System.out.print("Enter Player 1 Name: ");
                 String singlePlayerName = in.next();
                 playerName[0] = singlePlayerName;
                 gameHistory = runOnePlayerGame(playerName);
+
             } else if (userInput.equals("2")) {
                 System.out.print("Enter Player 1 Name: ");
                 String name1 = in.next();
@@ -52,6 +50,7 @@ public class TicTacToe {
                 String name2 = in.next();
                 playerName[1] = name2;
                 gameHistory = runTwoPlayerGame(playerName);
+
             } else if (userInput.equals("D")) {
                 if (gameHistory == null) {
                     System.out.println("no game played yet");
@@ -59,6 +58,7 @@ public class TicTacToe {
                     runGameHistory(playerName, gameHistory);
                 }
             } else if (userInput.equals("Q")) {
+
                 System.out.println("Thanks for playing. Hope you had fun!");
             } else {
                 System.out.println("Enter a valid input!");
@@ -99,6 +99,8 @@ public class TicTacToe {
         String secondPlayer;
         char startPlayerSymbol;
         char secondPlayerSymbol;
+
+        //tosses a coin to decide
         if (randValue >= 5) {
             startPlayer = playerNames[0];
             startPlayerSymbol = playerOneSymbol;
@@ -110,15 +112,18 @@ public class TicTacToe {
             secondPlayer = playerNames[0];
             secondPlayerSymbol = playerOneSymbol;
         }
+        //player gets to go first
         System.out.println(startPlayer + " gets to go first.");
         char[][] currentState = runPlayerMove(startPlayer, playerOneSymbol, getInitialGameState());
 //        System.out.print(displayGameFromState(currentState));
         gameHistory.add(currentState);
 
 
-
+        //runs the turns 8 times
         for (int i = 0; i < 10; i++) {
 
+
+            //runs the game turn by turn using modulus function
             if(!checkDraw(currentState) ) {
                 if (i % 2 == 0) {
                     char[][]  move = runPlayerMove(secondPlayer, playerTwoSymbol, gameHistory.get(gameHistory.size() - 1));
@@ -143,6 +148,7 @@ public class TicTacToe {
                     }
                 }
             }
+            //if game is draw then this happens
             else{
                 System.out.println("game draw");
                 displayGameFromState(currentState);
@@ -165,7 +171,8 @@ public class TicTacToe {
         String secondPlayer;
         char startPlayerSymbol;
         char secondPlayerSymbol;
-//        if (randValue >= 5) {
+        //tossea a coin to see who goes first
+        // if (randValue >= 5) {
         if (true){
             startPlayer = playerNames[0];
             startPlayerSymbol = playerOneSymbol;
@@ -190,12 +197,14 @@ public class TicTacToe {
         gameHistory.add(currentState);
 
 
-
+        //Runs the turns using modular f
         for (int i = 0; i < 10; i++) {
 
             if(!checkDraw(currentState)) {
+                // checks which player goes first
 
                 if(startPlayer.equals("Computer")) {
+
                     if (i % 2 == 0) {
                         char[][] move = runPlayerMove(secondPlayer, playerTwoSymbol, gameHistory.get(gameHistory.size() - 1));
                         gameHistory.add(move);
@@ -272,6 +281,8 @@ public class TicTacToe {
             int[] move = {moveRow, moveColumn};
             newState = currentState;
 
+
+//catches out of bound exception and promps the player to make a valid move. 
         try {
             while (!checkValidMove(move, currentState) || checkValidMove(move, currentState)) {
                 if (checkValidMove(move, currentState)) {
@@ -296,7 +307,8 @@ public class TicTacToe {
     // the 3x3 board, but does not check for availability of that space.
     private static int[] getInBoundsPlayerMove(String playerName) {
         Scanner sc = new Scanner(System.in);
-        // TODO
+
+
         System.out.println(playerName + "'s turn");
         System.out.print(playerName + " enter row: ");
         int moveRow = sc.nextInt();
@@ -314,11 +326,7 @@ public class TicTacToe {
 //
             return false;
         }
-        else if ((move[0] < 0 || move[0] > 2) || (move[1] < 0 || move[1] > 2)) {
-            System.out.println("Out of bounds");
-            return false;
 
-        }
         else{
             return true;
         }
@@ -348,20 +356,8 @@ public class TicTacToe {
         // you can just check if the same symbol occurs three times in any row, col, or diagonal (except empty space symbol)
         // But either implementation is valid: do whatever makes most sense to you.
 
-//        boolean win = false;
-//        boolean empty = true;
 
-
-//            for (int i = 0; i < 2; i++) {
-//                for (int j = 0; j < 2; j++) {
-//                    if (state[i][j] != emptySpaceSymbol) {
-//                        empty = false;
-//                    }
-//                }
-//            }
-
-
-
+        // hard code all the win conditions
 
         if (state[0][0] == playerOneSymbol && state[1][1] == playerOneSymbol && state[2][2] == playerOneSymbol
                 || state[0][2] == playerOneSymbol && state[1][1] == playerOneSymbol && state[2][0] == playerOneSymbol) {
@@ -403,7 +399,7 @@ public class TicTacToe {
 
 
 //
-
+        //checks for draw if game board if filled and no one has won
         for(int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (state[i][j] == emptySpaceSymbol) {
@@ -442,7 +438,7 @@ public class TicTacToe {
                 }
             }
         }
-
+//checks for the valid moves and then makes the valid winning moves.
         for (int x = 0; x <= 2; x++) {
             for (int y = 0; y <= 2; y++) {
                 move[0] = x;
@@ -489,6 +485,7 @@ public class TicTacToe {
                 }
             }
         }
+
         for(int x = 0; x <= 2; x++)
         {
             for(int y = 0; y<= 2; y++)
@@ -502,6 +499,7 @@ public class TicTacToe {
                 }
             }
         }
+        
 
         return test;
     }
@@ -517,16 +515,18 @@ public class TicTacToe {
 
         // Hint: iterate over gameHistory using a loop
 
-//
+        //using a nested loop to iterate through the game history
         for (int i = 0; i < gameHistory.size(); i++) {
             System.out.print(displayGameFromState(gameHistory.get(i)));
             int playerIndex = (i % 2);
             System.out.printf("Player %s (%s) made this move.\n\n", (playerIndex+1), playerNames[playerIndex]);
 
 
-
+            }
         }
     }
 
 
-}
+
+
+
